@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Sierra Experience Tarahumara</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1117;--surface:#171b26;--surface2:#1e2330;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --copper:#c87941;--copper2:#e8a065;--copper3:rgba(200,121,65,0.1);
+  --text:#e8e4db;--muted:rgba(232,228,219,0.42);--sw:235px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--bg);color:var(--text);display:flex;}
+
+.sb{width:var(--sw);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;height:100vh;}
+.sb-logo{padding:1.5rem 1.4rem 1.2rem;border-bottom:1px solid var(--border);}
+.sb-logo h1{font-family:'DM Serif Display',serif;font-size:1rem;color:var(--copper2);line-height:1.3;}
+.sb-logo p{font-size:.55rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;}
+.sb-nav{flex:1;padding:.6rem 0;overflow-y:auto;}
+.sb-sec{padding:.8rem 1.4rem .3rem;font-size:.52rem;letter-spacing:.32em;text-transform:uppercase;color:var(--muted);}
+.nb{display:flex;align-items:center;gap:.7rem;padding:.58rem 1.4rem;cursor:pointer;transition:all .2s;font-size:.76rem;color:var(--muted);position:relative;user-select:none;}
+.nb:hover{color:var(--text);background:rgba(255,255,255,.025);}
+.nb.on{color:var(--copper2);background:var(--copper3);}
+.nb.on::before{content:'';position:absolute;left:0;top:18%;bottom:18%;width:2px;background:var(--copper);border-radius:2px;}
+.nb-ic{font-size:.92rem;width:1.1rem;text-align:center;}
+.nb-count{margin-left:auto;background:rgba(200,121,65,.2);color:var(--copper2);font-size:.52rem;padding:.1rem .45rem;border-radius:99px;font-weight:500;}
+.sb-foot{padding:.8rem 1.4rem;border-top:1px solid var(--border);font-size:.6rem;color:var(--muted);}
+
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+.topbar{padding:.85rem 1.8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--surface);flex-shrink:0;}
+.tb-title{font-family:'DM Serif Display',serif;font-size:1.25rem;}
+.tb-title span{color:var(--copper2);font-style:italic;}
+.tb-acts{display:flex;gap:.6rem;align-items:center;}
+.btn{padding:.46rem 1rem;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.69rem;font-weight:400;letter-spacing:.04em;transition:all .18s;display:inline-flex;align-items:center;gap:.35rem;border-radius:2px;}
+.btn-primary{background:var(--copper);color:#fff;}.btn-primary:hover{background:var(--copper2);}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2);}.btn-ghost:hover{color:var(--text);}
+.btn-danger{background:transparent;color:#e57368;border:1px solid rgba(192,57,43,.3);}.btn-danger:hover{background:rgba(192,57,43,.1);}
+.btn-warn{background:rgba(201,147,10,.1);color:#e8c040;border:1px solid rgba(201,147,10,.3);}
+.btn-ok{background:rgba(61,153,112,.1);color:#5dbb96;border:1px solid rgba(61,153,112,.3);}.btn-ok:hover{background:rgba(61,153,112,.2);}
+.btn-sm{padding:.3rem .65rem;font-size:.62rem;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+
+.content{flex:1;overflow-y:auto;padding:1.4rem 1.8rem;}
+.view{display:none;animation:fi .25s ease;}
+.view.on{display:block;}
+
+/* STATS */
+.stats-4{display:grid;grid-template-columns:repeat(4,1fr);gap:.9rem;margin-bottom:1.2rem;}
+.stats-6{display:grid;grid-template-columns:repeat(6,1fr);gap:.8rem;margin-bottom:1.2rem;}
+.sc{background:var(--surface);border:1px solid var(--border);padding:1.1rem 1.3rem;position:relative;overflow:hidden;}
+.sc::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--copper),var(--copper2));}
+.sc-ic{position:absolute;right:.9rem;top:50%;transform:translateY(-50%);font-size:1.8rem;opacity:.07;}
+.sc-lbl{font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;}
+.sc-val{font-family:'DM Serif Display',serif;font-size:1.9rem;color:var(--copper2);line-height:1;}
+.sc-sub{font-size:.58rem;color:var(--muted);margin-top:.18rem;line-height:1.4;}
+.sc-green .sc-val{color:#5dbb96;}
+.sc-blue .sc-val{color:#5fa8d3;}
+.sc-yellow .sc-val{color:#e8c040;}
+.sc-red .sc-val{color:#e57368;}
+
+/* CHARTS */
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem;}
+.chart-card{background:var(--surface);border:1px solid var(--border);padding:1.3rem;}
+.chart-title{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between;}
+.bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.75rem;}
+.bar-label{font-size:.66rem;width:150px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;height:5px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--copper),var(--copper2));transition:width 1s ease;}
+.bar-fill-b{background:linear-gradient(90deg,#2471a3,#5fa8d3);}
+.bar-fill-g{background:linear-gradient(90deg,#27ae60,#5dbb96);}
+.bar-val{font-size:.63rem;color:var(--copper2);width:75px;text-align:right;flex-shrink:0;}
+
+/* RESUMEN ESTADOS */
+.estado-row{display:flex;gap:.6rem;margin-bottom:1.2rem;}
+.estado-pill{flex:1;background:var(--surface);border:1px solid var(--border);padding:.8rem 1rem;display:flex;flex-direction:column;gap:.3rem;align-items:center;text-align:center;}
+.estado-val{font-family:'DM Serif Display',serif;font-size:1.6rem;}
+.estado-lbl{font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);}
+
+/* PAISES */
+.paises-row{display:flex;flex-wrap:wrap;gap:.45rem;margin-bottom:1.2rem;}
+.ppill{display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1px solid var(--border);padding:.4rem .85rem;font-size:.68rem;}
+.pcnt{background:var(--copper3);color:var(--copper2);padding:.08rem .38rem;font-size:.58rem;font-weight:500;border-radius:2px;}
+
+/* TABLE */
+.tc{background:var(--surface);border:1px solid var(--border);margin-bottom:1rem;}
+.tc-head{padding:.8rem 1.3rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;}
+.tc-head-title{font-size:.78rem;font-weight:500;flex:1;}
+.si{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.4rem .82rem;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:300;outline:none;width:200px;transition:border-color .2s;}
+.si:focus{border-color:var(--copper);}
+.si::placeholder{color:var(--muted);}
+.rc{font-size:.6rem;color:var(--muted);}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:.58rem 1.3rem;font-size:.52rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);font-weight:400;white-space:nowrap;}
+td{padding:.72rem 1.3rem;font-size:.73rem;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,.013);}
+.td-acts{display:flex;gap:.35rem;}
+.es{padding:3rem;text-align:center;color:var(--muted);font-size:.75rem;}
+
+/* BADGES */
+.badge{display:inline-block;padding:.15rem .5rem;font-size:.55rem;letter-spacing:.08em;text-transform:uppercase;font-weight:500;border-radius:2px;}
+.bg{background:rgba(61,153,112,.14);color:#5dbb96;}
+.by{background:rgba(201,147,10,.14);color:#e8c040;}
+.br{background:rgba(192,57,43,.14);color:#e57368;}
+.bb{background:rgba(36,113,163,.14);color:#5fa8d3;}
+.bk{background:rgba(255,255,255,.07);color:var(--muted);}
+
+/* TOUR CARDS */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-bottom:1.2rem;}
+.card{background:var(--surface);border:1px solid var(--border);padding:1.3rem;transition:border-color .25s,transform .2s;}
+.card:hover{border-color:rgba(200,121,65,.3);transform:translateY(-2px);}
+.card-title{font-family:'DM Serif Display',serif;font-size:1.1rem;margin:.65rem 0 .4rem;}
+.card-desc{font-size:.68rem;color:var(--muted);line-height:1.75;margin-bottom:.9rem;}
+.card-meta{display:flex;gap:1rem;margin-bottom:.85rem;}
+.cmi{display:flex;flex-direction:column;gap:.12rem;}
+.cml{font-size:.5rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.cmv{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--copper2);}
+.tags{display:flex;flex-wrap:wrap;gap:.3rem;}
+.tag{font-size:.53rem;padding:.15rem .45rem;background:rgba(200,121,65,.07);border:1px solid rgba(200,121,65,.16);color:var(--copper2);}
+.card-acts{display:flex;gap:.45rem;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border);}
+
+/* GUIA CARDS */
+.guia-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.2rem;}
+.gc{background:var(--surface);border:1px solid var(--border);padding:1.5rem;text-align:center;transition:border-color .25s;}
+.gc:hover{border-color:rgba(200,121,65,.35);}
+.gc-av{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--copper),#1e4d2f);display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--copper2);margin:0 auto .9rem;}
+.gc-name{font-family:'DM Serif Display',serif;font-size:1.05rem;margin-bottom:.2rem;}
+.gc-esp{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--copper2);opacity:.8;margin-bottom:.7rem;}
+.gc-ids{display:flex;flex-wrap:wrap;gap:.28rem;justify-content:center;margin-bottom:.8rem;}
+.idioma{font-size:.53rem;padding:.13rem .42rem;border:1px solid rgba(200,121,65,.22);color:var(--muted);}
+.gc-stats{display:flex;justify-content:center;gap:1.4rem;padding-top:.8rem;border-top:1px solid var(--border);}
+.gcs{display:flex;flex-direction:column;align-items:center;gap:.12rem;}
+.gcv{font-family:'DM Serif Display',serif;font-size:1.15rem;color:var(--copper2);}
+.gcl{font-size:.5rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+
+/* RESENA CARDS */
+.resena-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.9rem;margin-bottom:1.2rem;}
+.rc-card{background:var(--surface);border:1px solid var(--border);padding:1.3rem;transition:border-color .22s;}
+.rc-card:hover{border-color:rgba(200,121,65,.25);}
+.rc-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.6rem;}
+.rc-autor{font-weight:500;font-size:.78rem;}
+.rc-tour{font-size:.6rem;color:var(--muted);margin-top:.08rem;}
+.rc-stars{color:#e8c040;font-size:.88rem;}
+.rc-txt{font-size:.7rem;color:var(--muted);line-height:1.8;font-style:italic;margin-bottom:.8rem;}
+.rc-foot{display:flex;align-items:center;justify-content:space-between;}
+.rc-fecha{font-size:.58rem;color:var(--muted);}
+
+/* SECTION LABEL */
+.slbl{font-size:.56rem;letter-spacing:.28em;text-transform:uppercase;color:var(--copper2);margin-bottom:.85rem;display:flex;align-items:center;gap:.6rem;}
+.slbl::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* MODAL */
+.mo{position:fixed;inset:0;z-index:500;background:rgba(6,8,14,.92);display:none;place-items:center;backdrop-filter:blur(5px);}
+.mo.on{display:grid;}
+.md{background:var(--surface);border:1px solid var(--border2);width:92%;max-width:600px;max-height:90vh;overflow-y:auto;animation:su .28s ease;}
+.md-head{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1;}
+.md-head h3{font-family:'DM Serif Display',serif;font-size:1.1rem;}
+.md-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;}.md-x:hover{color:var(--text);}
+.md-body{padding:1.5rem;}
+.md-foot{padding:.85rem 1.5rem;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:.6rem;position:sticky;bottom:0;background:var(--surface);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:.82rem;}
+.ff{grid-column:1/-1;}
+.fgi{display:flex;flex-direction:column;gap:.3rem;}
+.fl{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);}
+.fc{background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:.53rem .8rem;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:300;outline:none;transition:border-color .2s;width:100%;}
+.fc:focus{border-color:var(--copper);}
+.fc option{background:var(--surface2);}
+textarea.fc{resize:vertical;min-height:70px;}
+.fh{font-size:.58rem;color:var(--muted);margin-top:.15rem;}
+.cd{background:var(--surface);border:1px solid var(--border2);padding:1.8rem 2.2rem;width:90%;max-width:340px;text-align:center;animation:su .25s ease;}
+.cd h3{font-family:'DM Serif Display',serif;font-size:1.05rem;margin-bottom:.55rem;}
+.cd p{font-size:.71rem;color:var(--muted);margin-bottom:1.6rem;line-height:1.8;}
+.cd-btns{display:flex;gap:.55rem;justify-content:center;}
+.tst-wrap{position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;display:flex;flex-direction:column;gap:.4rem;}
+.tst{padding:.72rem 1.2rem;font-size:.7rem;display:flex;align-items:center;gap:.55rem;animation:ti .25s ease;min-width:240px;border-radius:2px;}
+.tst-ok{background:#142a1e;border:1px solid rgba(61,153,112,.45);color:#5dbb96;}
+.tst-err{background:#2a1414;border:1px solid rgba(192,57,43,.45);color:#e57368;}
+.ld{display:inline-block;width:13px;height:13px;border:2px solid var(--border2);border-top-color:var(--copper);border-radius:50%;animation:sp .55s linear infinite;}
+.pl{display:flex;align-items:center;justify-content:center;padding:3.5rem;gap:.8rem;color:var(--muted);font-size:.75rem;}
+
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes ti{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sb">
+  <div class="sb-logo"><h1>Sierra Experience</h1><p>Tarahumara · Panel Admin</p></div>
+  <nav class="sb-nav">
+    <div class="sb-sec">General</div>
+    <div class="nb on" data-sec="dashboard"><span class="nb-ic">📊</span>Dashboard</div>
+    <div class="sb-sec">Gestión</div>
+    <div class="nb" data-sec="tours"><span class="nb-ic">🏔️</span>Tours <span class="nb-count">4</span></div>
+    <div class="nb" data-sec="reservaciones"><span class="nb-ic">📅</span>Reservaciones <span class="nb-count">40</span></div>
+    <div class="nb" data-sec="clientes"><span class="nb-ic">👥</span>Clientes <span class="nb-count">42</span></div>
+    <div class="nb" data-sec="guias"><span class="nb-ic">🦅</span>Guías <span class="nb-count">3</span></div>
+    <div class="nb" data-sec="pagos"><span class="nb-ic">💳</span>Pagos <span class="nb-count">28</span></div>
+    <div class="nb" data-sec="resenas"><span class="nb-ic">⭐</span>Reseñas <span class="nb-count">24</span></div>
+  </nav>
+  <div class="sb-foot">Sierra Experience © 2026 · Creel, Chih.</div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="tbTitle">Dashboard <span>General</span></div>
+    <div class="tb-acts">
+      <button class="btn btn-ghost btn-sm" onclick="reload()">↺ Actualizar</button>
+      <button class="btn btn-primary btn-sm" id="addBtn" style="display:none" onclick="openAdd()">+ Agregar</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="view on" id="v-dashboard">
+
+      <!-- Fila 1: métricas principales -->
+      <div class="stats-4">
+        <div class="sc"><div class="sc-ic">🏔️</div>
+          <div class="sc-lbl">Tours activos</div>
+          <div class="sc-val">4</div>
+          <div class="sc-sub">Fácil · Moderado · Extremo</div>
+        </div>
+        <div class="sc"><div class="sc-ic">📅</div>
+          <div class="sc-lbl">Reservaciones totales</div>
+          <div class="sc-val">40</div>
+          <div class="sc-sub">20 confirmadas · 14 pendientes · 6 completadas</div>
+        </div>
+        <div class="sc"><div class="sc-ic">👥</div>
+          <div class="sc-lbl">Clientes registrados</div>
+          <div class="sc-val">42</div>
+          <div class="sc-sub">de 12 países · 101 viajeros en tours</div>
+        </div>
+        <div class="sc"><div class="sc-ic">💰</div>
+          <div class="sc-lbl">Ingresos cobrados (MXN)</div>
+          <div class="sc-val">$192,500</div>
+          <div class="sc-sub">26 pagos completados · $7,404 prom.</div>
+        </div>
+      </div>
+
+      <!-- Fila 2: estados de reservaciones -->
+      <div class="estado-row">
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#e8c040">14</div>
+          <div class="estado-lbl">Pendientes</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#5dbb96">20</div>
+          <div class="estado-lbl">Confirmadas</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#5fa8d3">6</div>
+          <div class="estado-lbl">Completadas</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#e57368">0</div>
+          <div class="estado-lbl">Canceladas</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#5dbb96">26</div>
+          <div class="estado-lbl">Pagos completados</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#e8c040">2</div>
+          <div class="estado-lbl">Pagos pendientes</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#5dbb96">19</div>
+          <div class="estado-lbl">Reseñas aprobadas</div>
+        </div>
+        <div class="estado-pill">
+          <div class="estado-val" style="color:#e8c040">5</div>
+          <div class="estado-lbl">Reseñas pendientes</div>
+        </div>
+      </div>
+
+      <!-- Fila 3: gráficas -->
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">Reservaciones por tour <span style="color:var(--copper2)">40 total</span></div>
+          <div class="bar-row">
+            <div class="bar-label">Barrancas del Cobre</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">11 res.</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Experiencia Rarámuri</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">11 res.</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Cascada de Cusárare</div>
+            <div class="bar-track"><div class="bar-fill" style="width:91%"></div></div>
+            <div class="bar-val">10 res.</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Aventura Cañón Urique</div>
+            <div class="bar-track"><div class="bar-fill" style="width:73%"></div></div>
+            <div class="bar-val">8 res.</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Ingresos por tour (MXN) <span style="color:var(--copper2)">$323,800 facturado</span></div>
+          <div class="bar-row">
+            <div class="bar-label">Cascada de Cusárare</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">$145,600</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Aventura Cañón Urique</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-b" style="width:54%"></div></div>
+            <div class="bar-val">$79,200</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Barrancas del Cobre</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-g" style="width:43%"></div></div>
+            <div class="bar-val">$63,000</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Experiencia Rarámuri</div>
+            <div class="bar-track"><div class="bar-fill" style="width:25%;background:linear-gradient(90deg,#7d3c98,#b47fca)"></div></div>
+            <div class="bar-val">$36,000</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 4: viajeros por tour + metodos de pago -->
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">Viajeros por tour <span style="color:var(--copper2)">101 total</span></div>
+          <div class="bar-row">
+            <div class="bar-label">Cascada de Cusárare</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">52 viajeros</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Experiencia Rarámuri</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-g" style="width:46%"></div></div>
+            <div class="bar-val">24 viajeros</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Barrancas del Cobre</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-b" style="width:27%"></div></div>
+            <div class="bar-val">14 viajeros</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">Aventura Cañón Urique</div>
+            <div class="bar-track"><div class="bar-fill" style="width:21%;background:linear-gradient(90deg,#7d3c98,#b47fca)"></div></div>
+            <div class="bar-val">11 viajeros</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Métodos de pago <span style="color:var(--copper2)">40 reservaciones</span></div>
+          <div class="bar-row">
+            <div class="bar-label">💳 Tarjeta</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">14 res. (35%)</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🏦 Transferencia</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-b" style="width:100%"></div></div>
+            <div class="bar-val">14 res. (35%)</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">💵 Efectivo</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-g" style="width:57%"></div></div>
+            <div class="bar-val">8 res. (20%)</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🅿️ PayPal</div>
+            <div class="bar-track"><div class="bar-fill" style="width:29%;background:linear-gradient(90deg,#1a6da8,#5fa8d3)"></div></div>
+            <div class="bar-val">4 res. (10%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 5: clientes por país -->
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">Clientes por país <span style="color:var(--copper2)">12 países · 42 clientes</span></div>
+          <div class="bar-row">
+            <div class="bar-label">🇲🇽 México</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">21 clientes</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🇺🇸 Estados Unidos</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-b" style="width:29%"></div></div>
+            <div class="bar-val">6 clientes</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🇩🇪 Alemania</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-g" style="width:14%"></div></div>
+            <div class="bar-val">3 clientes</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🇫🇷 Francia</div>
+            <div class="bar-track"><div class="bar-fill" style="width:14%;background:linear-gradient(90deg,#7d3c98,#b47fca)"></div></div>
+            <div class="bar-val">3 clientes</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🇯🇵 Japón</div>
+            <div class="bar-track"><div class="bar-fill" style="width:10%;background:linear-gradient(90deg,#c87941,#e8a065)"></div></div>
+            <div class="bar-val">2 clientes</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🇷🇺🇨🇱🇮🇹🇨🇴🇦🇪🇦🇷🇪🇸 Otros 7</div>
+            <div class="bar-track"><div class="bar-fill" style="width:5%;background:rgba(255,255,255,.2)"></div></div>
+            <div class="bar-val">1 c/u</div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Resumen financiero <span style="color:var(--copper2)">cobrado vs pendiente</span></div>
+          <div class="bar-row">
+            <div class="bar-label">✅ Cobrado (26 pagos)</div>
+            <div class="bar-track"><div class="bar-fill" style="width:100%"></div></div>
+            <div class="bar-val">$192,500</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">⏳ Por cobrar (2 pagos)</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-b" style="width:2%"></div></div>
+            <div class="bar-val">$3,000</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">📋 Total facturado</div>
+            <div class="bar-track"><div class="bar-fill bar-fill-g" style="width:100%"></div></div>
+            <div class="bar-val">$323,800</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">⭐ Reseñas aprobadas</div>
+            <div class="bar-track"><div class="bar-fill" style="width:79%;background:linear-gradient(90deg,#c9930a,#e8c040)"></div></div>
+            <div class="bar-val">19 de 24</div>
+          </div>
+          <div class="bar-row">
+            <div class="bar-label">🌟 Calificación promedio</div>
+            <div class="bar-track"><div class="bar-fill" style="width:96%;background:linear-gradient(90deg,#c9930a,#e8c040)"></div></div>
+            <div class="bar-val">4.8 / 5.0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Últimas reservaciones -->
+      <div class="tc">
+        <div class="tc-head"><span class="tc-head-title">Últimas reservaciones</span><span class="rc">40 total</span></div>
+        <table><thead><tr><th>Cliente</th><th>Tour</th><th>Fecha</th><th>Personas</th><th>Total</th><th>Estado</th></tr></thead>
+        <tbody id="dash-tbody"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ TOURS ══ -->
+    <div class="view" id="v-tours">
+      <div class="stats-4">
+        <div class="sc sc-green"><div class="sc-lbl">Total tours</div><div class="sc-val">4</div><div class="sc-sub">Todos activos</div></div>
+        <div class="sc"><div class="sc-lbl">Más reservado</div><div class="sc-val" style="font-size:1rem;line-height:1.3">Barrancas / Rarámuri</div><div class="sc-sub">11 reservaciones c/u</div></div>
+        <div class="sc sc-blue"><div class="sc-lbl">Mayor ingreso</div><div class="sc-val" style="font-size:1rem;line-height:1.3">Cascada Cusárare</div><div class="sc-sub">$145,600 MXN</div></div>
+        <div class="sc"><div class="sc-lbl">Total viajeros</div><div class="sc-val">101</div><div class="sc-sub">en todos los tours</div></div>
+      </div>
+      <div class="slbl">4 tours disponibles</div>
+      <div class="cards" id="tours-cards"></div>
+      <div class="tc">
+        <div class="tc-head">
+          <span class="tc-head-title">Tabla de tours</span>
+          <input class="si" id="s-tours" placeholder="🔍 Buscar…" oninput="filter('tours')">
+          <span class="rc" id="rc-tours"></span>
+        </div>
+        <table><thead><tr><th>Nombre</th><th>Dificultad</th><th>Días</th><th>Precio/persona</th><th>Precio grupo</th><th>Capacidad</th><th>Reservaciones</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-tours"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ RESERVACIONES ══ -->
+    <div class="view" id="v-reservaciones">
+      <div class="stats-4">
+        <div class="sc sc-yellow"><div class="sc-lbl">Pendientes</div><div class="sc-val" id="res-pend">14</div><div class="sc-sub">requieren confirmación</div></div>
+        <div class="sc sc-green"><div class="sc-lbl">Confirmadas</div><div class="sc-val" id="res-conf">20</div><div class="sc-sub">listas para viajar</div></div>
+        <div class="sc sc-blue"><div class="sc-lbl">Completadas</div><div class="sc-val" id="res-comp">6</div><div class="sc-sub">tours finalizados</div></div>
+        <div class="sc sc-red"><div class="sc-lbl">Canceladas</div><div class="sc-val" id="res-canc">0</div><div class="sc-sub">sin cancelaciones</div></div>
+      </div>
+      <div class="tc">
+        <div class="tc-head">
+          <span class="tc-head-title">Todas las reservaciones</span>
+          <input class="si" id="s-reservaciones" placeholder="🔍 Buscar…" oninput="filter('reservaciones')">
+          <span class="rc" id="rc-reservaciones"></span>
+        </div>
+        <table><thead><tr><th>Cliente</th><th>Tour</th><th>Guía</th><th>Fecha inicio</th><th>Fecha fin</th><th>Personas</th><th>Total</th><th>Método</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-reservaciones"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ CLIENTES ══ -->
+    <div class="view" id="v-clientes">
+      <div class="stats-4">
+        <div class="sc sc-green"><div class="sc-lbl">Total clientes</div><div class="sc-val">42</div><div class="sc-sub">registrados</div></div>
+        <div class="sc"><div class="sc-lbl">Países</div><div class="sc-val">12</div><div class="sc-sub">alcance internacional</div></div>
+        <div class="sc sc-blue"><div class="sc-lbl">Más frecuente</div><div class="sc-val" style="font-size:1.1rem;line-height:1.2">México</div><div class="sc-sub">21 clientes (50%)</div></div>
+        <div class="sc"><div class="sc-lbl">Internacionales</div><div class="sc-val">21</div><div class="sc-sub">de 11 países distintos</div></div>
+      </div>
+      <div class="slbl">Clientes por país</div>
+      <div class="paises-row">
+        <div class="ppill">🇲🇽 México <span class="pcnt">21</span></div>
+        <div class="ppill">🇺🇸 Estados Unidos <span class="pcnt">6</span></div>
+        <div class="ppill">🇩🇪 Alemania <span class="pcnt">3</span></div>
+        <div class="ppill">🇫🇷 Francia <span class="pcnt">3</span></div>
+        <div class="ppill">🇯🇵 Japón <span class="pcnt">2</span></div>
+        <div class="ppill">🇷🇺 Rusia <span class="pcnt">1</span></div>
+        <div class="ppill">🇨🇱 Chile <span class="pcnt">1</span></div>
+        <div class="ppill">🇮🇹 Italia <span class="pcnt">1</span></div>
+        <div class="ppill">🇨🇴 Colombia <span class="pcnt">1</span></div>
+        <div class="ppill">🇦🇪 Emiratos Árabes <span class="pcnt">1</span></div>
+        <div class="ppill">🇦🇷 Argentina <span class="pcnt">1</span></div>
+        <div class="ppill">🇪🇸 España <span class="pcnt">1</span></div>
+      </div>
+      <div class="tc">
+        <div class="tc-head">
+          <span class="tc-head-title">Todos los clientes</span>
+          <input class="si" id="s-clientes" placeholder="🔍 Buscar cliente…" oninput="filter('clientes')">
+          <span class="rc" id="rc-clientes"></span>
+        </div>
+        <table><thead><tr><th>#</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>País</th><th>Ciudad</th><th>Notas</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-clientes"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ GUÍAS ══ -->
+    <div class="view" id="v-guias">
+      <div class="stats-4">
+        <div class="sc sc-green"><div class="sc-lbl">Guías activos</div><div class="sc-val">3</div><div class="sc-sub">todos disponibles</div></div>
+        <div class="sc"><div class="sc-lbl">Idiomas cubiertos</div><div class="sc-val">3</div><div class="sc-sub">Español · Inglés · Rarámuri</div></div>
+        <div class="sc sc-blue"><div class="sc-lbl">Tours asignados</div><div class="sc-val">40</div><div class="sc-sub">en total entre los 3</div></div>
+        <div class="sc"><div class="sc-lbl">Especialidades</div><div class="sc-val">3</div><div class="sc-sub">Senderismo · Cultura · Naturaleza</div></div>
+      </div>
+      <div class="slbl">Equipo de guías</div>
+      <div class="guia-grid" id="guias-cards"></div>
+      <div class="tc">
+        <div class="tc-head">
+          <span class="tc-head-title">Gestionar guías</span>
+          <input class="si" id="s-guias" placeholder="🔍 Buscar guía…" oninput="filter('guias')">
+          <span class="rc" id="rc-guias"></span>
+        </div>
+        <table><thead><tr><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Especialidad</th><th>Idiomas</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-guias"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ PAGOS ══ -->
+    <div class="view" id="v-pagos">
+      <div class="stats-4">
+        <div class="sc sc-green"><div class="sc-lbl">Pagos completados</div><div class="sc-val" id="pag-total">26</div><div class="sc-sub">transacciones exitosas</div></div>
+        <div class="sc"><div class="sc-lbl">Ingresos cobrados</div><div class="sc-val" id="pag-suma">$192,500</div><div class="sc-sub">MXN total recaudado</div></div>
+        <div class="sc sc-yellow"><div class="sc-lbl">Pendientes de cobro</div><div class="sc-val" id="pag-pend">2</div><div class="sc-sub">$3,000 MXN por cobrar</div></div>
+        <div class="sc sc-blue"><div class="sc-lbl">Ticket promedio</div><div class="sc-val" id="pag-avg">$7,404</div><div class="sc-sub">MXN por transacción</div></div>
+      </div>
+      <div class="chart-row">
+        <div class="chart-card">
+          <div class="chart-title">Reservaciones por método de pago <span style="color:var(--copper2)">40 total</span></div>
+          <div class="bar-row"><div class="bar-label">💳 Tarjeta</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">14 res. (35%)</div></div>
+          <div class="bar-row"><div class="bar-label">🏦 Transferencia</div><div class="bar-track"><div class="bar-fill bar-fill-b" style="width:100%"></div></div><div class="bar-val">14 res. (35%)</div></div>
+          <div class="bar-row"><div class="bar-label">💵 Efectivo</div><div class="bar-track"><div class="bar-fill bar-fill-g" style="width:57%"></div></div><div class="bar-val">8 res. (20%)</div></div>
+          <div class="bar-row"><div class="bar-label">🅿️ PayPal</div><div class="bar-track"><div class="bar-fill" style="width:29%;background:linear-gradient(90deg,#1a6da8,#5fa8d3)"></div></div><div class="bar-val">4 res. (10%)</div></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Ingresos por estatus <span style="color:var(--copper2)">28 pagos registrados</span></div>
+          <div class="bar-row"><div class="bar-label">✅ Completados (26 pagos)</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="bar-val">$192,500</div></div>
+          <div class="bar-row"><div class="bar-label">⏳ Pendientes (2 pagos)</div><div class="bar-track"><div class="bar-fill bar-fill-b" style="width:2%"></div></div><div class="bar-val">$3,000</div></div>
+          <div class="bar-row"><div class="bar-label">📋 Total facturado (40 res.)</div><div class="bar-track"><div class="bar-fill bar-fill-g" style="width:100%"></div></div><div class="bar-val">$323,800</div></div>
+        </div>
+      </div>
+      <div class="tc">
+        <div class="tc-head">
+          <span class="tc-head-title">Todos los pagos</span>
+          <input class="si" id="s-pagos" placeholder="🔍 Buscar referencia…" oninput="filter('pagos')">
+          <span class="rc" id="rc-pagos"></span>
+        </div>
+        <table><thead><tr><th>Cliente</th><th>Tour</th><th>Monto</th><th>Método</th><th>Referencia</th><th>Fecha</th><th>Estatus</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-pagos"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ══ RESEÑAS ══ -->
+    <div class="view" id="v-resenas">
+      <div class="stats-4">
+        <div class="sc sc-green"><div class="sc-lbl">Total reseñas</div><div class="sc-val">24</div><div class="sc-sub">de clientes reales</div></div>
+        <div class="sc"><div class="sc-lbl">Aprobadas</div><div class="sc-val">19</div><div class="sc-sub">publicadas en el sitio</div></div>
+        <div class="sc sc-yellow"><div class="sc-lbl">Pendientes moderación</div><div class="sc-val">5</div><div class="sc-sub">esperando aprobación</div></div>
+        <div class="sc sc-blue"><div class="sc-lbl">Calificación promedio</div><div class="sc-val">4.8 ★</div><div class="sc-sub">sobre 5.0 · excelente</div></div>
+      </div>
+      <div class="slbl">Reseñas aprobadas destacadas</div>
+      <div class="resena-grid" id="resenas-cards"></div>
+      <div class="tc" style="margin-top:1rem">
+        <div class="tc-head">
+          <span class="tc-head-title">Todas las reseñas</span>
+          <input class="si" id="s-resenas" placeholder="🔍 Buscar…" oninput="filter('resenas')">
+          <span class="rc" id="rc-resenas"></span>
+        </div>
+        <table><thead><tr><th>Cliente</th><th>Tour</th><th>Calificación</th><th>Comentario</th><th>Estado</th><th>Acciones</th></tr></thead>
+        <tbody id="tb-resenas"></tbody></table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="mo" id="mo">
+  <div class="md">
+    <div class="md-head"><h3 id="mo-title">–</h3><button class="md-x" onclick="closeMo()">✕</button></div>
+    <div class="md-body" id="mo-body"></div>
+    <div class="md-foot">
+      <button class="btn btn-ghost" onclick="closeMo()">Cancelar</button>
+      <button class="btn btn-primary" id="mo-save" onclick="save()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="mo" id="co">
+  <div class="cd">
+    <h3>¿Eliminar registro?</h3>
+    <p>Esta acción es permanente y no se puede deshacer.</p>
+    <div class="cd-btns">
+      <button class="btn btn-ghost" onclick="closeCo()">Cancelar</button>
+      <button class="btn btn-danger" id="co-btn">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<div class="tst-wrap" id="tsts"></div>
+
+<script>
+const SURL='https://dsaizbknwqwoyeetqiee.supabase.co'
+const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzYWl6Ymtud3F3b3llZXRxaWVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIxODQ2OTQsImV4cCI6MjA4Nzc2MDY5NH0.c3-GZVnkcUBtq_fdDy7SHJxv07mDDTp5SHLnfx4q744'
+
+async function api(path,opts={}){
+  const r=await fetch(`${SURL}/rest/v1/${path}`,{headers:{apikey:SKEY,Authorization:`Bearer ${SKEY}`,'Content-Type':'application/json',Prefer:'return=representation',...(opts.headers||{})}, ...opts})
+  const txt=await r.text();const data=txt?JSON.parse(txt):null
+  if(!r.ok) throw new Error(data?.message||`Error ${r.status}`)
+  return data
+}
+
+let cur='dashboard',cache={},editSec=null,editId=null,delSec=null,delId=null
+let TM={},CM={},GM={},RM={},PC={}
+
+// Conteo tours reservaciones para tabla
+const TOUR_RES={
+  '90948d93-8692-4971-a70c-05bd59c109a6':11,
+  'eb711bee-b6f3-4c20-9629-1c525525d8c8':10,
+  'e4d32e27-8dd3-42aa-b1f8-23719955daa0':11,
+  'a3e66ec1-b197-44fb-9554-9ab92f22b797':8
+}
+
+const LABELS={
+  dashboard:{t:'Dashboard',s:'General'},tours:{t:'Tours',s:'& Paquetes'},
+  reservaciones:{t:'Reservaciones',s:'& Bookings'},clientes:{t:'Clientes',s:'Registrados'},
+  guias:{t:'Guías',s:'Turísticos'},pagos:{t:'Pagos',s:'& Transacciones'},resenas:{t:'Reseñas',s:'& Calificaciones'}
+}
+
+document.querySelectorAll('.nb').forEach(nb=>nb.addEventListener('click',()=>{
+  document.querySelectorAll('.nb').forEach(n=>n.classList.remove('on'))
+  nb.classList.add('on');go(nb.dataset.sec)
+}))
+
+function go(sec){
+  cur=sec
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'))
+  document.getElementById(`v-${sec}`)?.classList.add('on')
+  const L=LABELS[sec]||{}
+  document.getElementById('tbTitle').innerHTML=`${L.t} <span>${L.s||''}</span>`
+  const ab=document.getElementById('addBtn')
+  if(sec==='dashboard'){ab.style.display='none';loadDashboard()}
+  else{ab.style.display='inline-flex';loadSection(sec)}
+}
+function reload(){go(cur)}
+
+async function loadMaps(){
+  const [t,c,g,r]=await Promise.all([
+    api('tours?select=id,nombre,dificultad,duracion_dias,precio_por_persona,precio_grupo,capacidad_maxima,incluye,no_incluye,descripcion,activo'),
+    api('clientes?select=id,nombre,apellido,pais'),
+    api('guias?select=id,nombre,apellido'),
+    api('reservaciones?select=id,cliente_id,tour_id')
+  ])
+  t.forEach(x=>TM[x.id]=x.nombre)
+  c.forEach(x=>{CM[x.id]=`${x.nombre} ${x.apellido}`;PC[x.id]=x.pais||''})
+  g.forEach(x=>GM[x.id]=`${x.nombre} ${x.apellido}`)
+  r.forEach(x=>RM[x.id]={cli:CM[x.cliente_id]||'–',tour:TM[x.tour_id]||'–'})
+}
+
+// DASHBOARD
+async function loadDashboard(){
+  try{
+    if(!Object.keys(TM).length) await loadMaps()
+    const res=await api('reservaciones?select=id,cliente_id,tour_id,fecha_inicio,fecha_fin,num_personas,precio_total,estado,metodo_pago&order=created_at.desc&limit=15')
+    const tb=document.getElementById('dash-tbody')
+    tb.innerHTML=res.map(r=>`<tr>
+      <td><strong>${CM[r.cliente_id]||'–'}</strong></td>
+      <td style="max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${TM[r.tour_id]||'–'}</td>
+      <td>${fmtD(r.fecha_inicio)}</td>
+      <td>${r.num_personas} pax</td>
+      <td><strong>$${Number(r.precio_total).toLocaleString('es-MX')}</strong></td>
+      <td>${bEstado(r.estado)}</td></tr>`).join('')
+  }catch(e){toast('Error: '+e.message,'err')}
+}
+
+// SECTION
+async function loadSection(sec){
+  const tb=document.getElementById(`tb-${sec}`)
+  if(tb) tb.innerHTML=`<tr><td colspan="10"><div class="pl"><div class="ld"></div> Cargando…</div></td></tr>`
+  try{
+    if(!Object.keys(TM).length) await loadMaps()
+    const Q={
+      tours:'tours?order=precio_por_persona.asc',
+      reservaciones:'reservaciones?select=*&order=created_at.desc',
+      clientes:'clientes?order=created_at.desc',
+      guias:'guias?order=nombre',
+      pagos:'pagos?select=*&order=created_at.desc',
+      resenas:'resenas?select=*&order=created_at.desc'
+    }
+    cache[sec]=await api(Q[sec])
+    renderTable(sec,cache[sec])
+    if(sec==='tours') renderToursCards(cache[sec])
+    if(sec==='guias') renderGuiasCards(cache[sec])
+    if(sec==='resenas') renderResenasCards(cache[sec])
+    if(sec==='reservaciones'){
+      const d=cache[sec]
+      document.getElementById('res-pend').textContent=d.filter(r=>r.estado==='pendiente').length
+      document.getElementById('res-conf').textContent=d.filter(r=>r.estado==='confirmada').length
+      document.getElementById('res-comp').textContent=d.filter(r=>r.estado==='completada').length
+      document.getElementById('res-canc').textContent=d.filter(r=>r.estado==='cancelada').length
+    }
+    if(sec==='pagos'){
+      const d=cache[sec]
+      const comp=d.filter(p=>p.estatus==='completado')
+      const suma=comp.reduce((s,p)=>s+parseFloat(p.monto||0),0)
+      const avg=comp.length?Math.round(suma/comp.length):0
+      document.getElementById('pag-total').textContent=comp.length
+      document.getElementById('pag-suma').textContent='$'+suma.toLocaleString('es-MX',{maximumFractionDigits:0})
+      document.getElementById('pag-pend').textContent=d.filter(p=>p.estatus==='pendiente').length
+      document.getElementById('pag-avg').textContent='$'+avg.toLocaleString('es-MX')
+    }
+  }catch(e){
+    if(tb) tb.innerHTML=`<tr><td colspan="10" class="es">Error: ${e.message}</td></tr>`
+    toast(e.message,'err')
+  }
+}
+
+function renderToursCards(data){
+  const dif={fácil:'bg',moderado:'by',difícil:'br',extremo:'br'}
+  const em={fácil:'🌿',moderado:'🏃',difícil:'🧗',extremo:'⚡'}
+  document.getElementById('tours-cards').innerHTML=data.map(t=>`
+    <div class="card">
+      <span class="badge ${dif[t.dificultad]||'bk'}">${em[t.dificultad]||''} ${t.dificultad}</span>
+      <div class="card-title">${esc(t.nombre)}</div>
+      <div class="card-desc">${esc((t.descripcion||'').slice(0,100))}${t.descripcion?.length>100?'…':''}</div>
+      <div class="card-meta">
+        <div class="cmi"><div class="cml">Precio/persona</div><div class="cmv">$${Number(t.precio_por_persona).toLocaleString('es-MX')}</div></div>
+        <div class="cmi"><div class="cml">Duración</div><div class="cmv">${t.duracion_dias}d</div></div>
+        <div class="cmi"><div class="cml">Capacidad</div><div class="cmv">${t.capacidad_maxima} pax</div></div>
+        <div class="cmi"><div class="cml">Reservaciones</div><div class="cmv">${TOUR_RES[t.id]||0}</div></div>
+      </div>
+      <div class="tags">${(t.incluye||[]).map(x=>`<span class="tag">✓ ${x}</span>`).join('')}</div>
+      <div class="card-acts">
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('tours','${t.id}')">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="askDel('tours','${t.id}')">🗑️ Eliminar</button>
+      </div>
+    </div>`).join('')
+}
+
+function renderGuiasCards(data){
+  const tours={
+    '15af2711-c3d8-41e5-880c-4a24dc13785c':{t:18,r:4.9},
+    '1f720c00-abcc-45df-aba6-867283b78bfd':{t:14,r:5.0},
+    '357bac4f-41ed-469b-8ee9-9f363951957c':{t:12,r:4.9}
+  }
+  document.getElementById('guias-cards').innerHTML=data.map(g=>{
+    const s=tours[g.id]||{t:'–',r:'–'}
+    return `<div class="gc">
+      <div class="gc-av">${g.nombre[0]}${g.apellido[0]}</div>
+      <div class="gc-name">${esc(g.nombre)} ${esc(g.apellido)}</div>
+      <div class="gc-esp">${esc(g.especialidad||'')}</div>
+      <div class="gc-ids">${(g.idiomas||[]).map(l=>`<span class="idioma">${l}</span>`).join('')}</div>
+      <div>${g.activo?'<span class="badge bg">● Activo</span>':'<span class="badge bk">● Inactivo</span>'}</div>
+      <div class="gc-stats">
+        <div class="gcs"><div class="gcv">${s.t}</div><div class="gcl">Tours</div></div>
+        <div class="gcs"><div class="gcv">${s.r}★</div><div class="gcl">Rating</div></div>
+        <div class="gcs"><div class="gcv">${(g.idiomas||[]).length}</div><div class="gcl">Idiomas</div></div>
+      </div>
+      <div class="card-acts">
+        <button class="btn btn-ghost btn-sm" onclick="openEdit('guias','${g.id}')">✏️ Editar</button>
+        <button class="btn btn-danger btn-sm" onclick="askDel('guias','${g.id}')">🗑️</button>
+      </div>
+    </div>`}).join('')
+}
+
+function renderResenasCards(data){
+  const aprobadas=data.filter(r=>r.aprobada)
+  document.getElementById('resenas-cards').innerHTML=aprobadas.slice(0,6).map(r=>`
+    <div class="rc-card">
+      <div class="rc-head">
+        <div><div class="rc-autor">${CM[r.cliente_id]||'–'}</div>
+        <div class="rc-tour">🏔️ ${TM[r.tour_id]||'–'}</div></div>
+        <div class="rc-stars">${'★'.repeat(r.calificacion)}${'☆'.repeat(5-r.calificacion)}</div>
+      </div>
+      <div class="rc-txt">"${esc(r.comentario||'')}"</div>
+      <div class="rc-foot"><span class="rc-fecha">${fmtD(r.created_at)}</span><span class="badge bg">Publicada</span></div>
+    </div>`).join('')
+}
+
+function renderTable(sec,data){
+  const tb=document.getElementById(`tb-${sec}`)
+  if(!tb) return
+  const rc=document.getElementById(`rc-${sec}`)
+  if(rc) rc.textContent=`${data.length} registros`
+  if(!data.length){tb.innerHTML=`<tr><td colspan="10" class="es">Sin registros</td></tr>`;return}
+  const rows={
+    tours: d=>`<td><strong>${esc(d.nombre)}</strong></td><td>${bDif(d.dificultad)}</td>
+      <td>${d.duracion_dias}d</td>
+      <td>$${Number(d.precio_por_persona).toLocaleString('es-MX')}</td>
+      <td>$${Number(d.precio_grupo||0).toLocaleString('es-MX')}</td>
+      <td>${d.capacidad_maxima} pax</td>
+      <td><span class="badge bb">${TOUR_RES[d.id]||0} res.</span></td>
+      <td>${d.activo?'<span class="badge bg">Activo</span>':'<span class="badge bk">Inactivo</span>'}</td>`,
+    reservaciones: d=>`<td><strong>${CM[d.cliente_id]||'–'}</strong></td>
+      <td style="max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${TM[d.tour_id]||'–'}</td>
+      <td>${GM[d.guia_id]||'–'}</td>
+      <td>${fmtD(d.fecha_inicio)}</td><td>${fmtD(d.fecha_fin)}</td>
+      <td>${d.num_personas} pax</td>
+      <td><strong>$${Number(d.precio_total).toLocaleString('es-MX')}</strong></td>
+      <td>${d.metodo_pago||'–'}</td>
+      <td>${bEstado(d.estado)}</td>`,
+    clientes: d=>`<td style="color:var(--muted);font-size:.62rem">${data.indexOf(d)+1}</td>
+      <td><strong>${esc(d.nombre)} ${esc(d.apellido)}</strong></td>
+      <td>${esc(d.email)}</td><td>${d.telefono||'–'}</td>
+      <td>${d.pais||'–'}</td><td>${d.ciudad||'–'}</td>
+      <td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.66rem;color:var(--muted)">${d.notas||'–'}</td>`,
+    guias: d=>`<td><strong>${esc(d.nombre)} ${esc(d.apellido)}</strong></td>
+      <td>${d.email||'–'}</td><td>${d.telefono||'–'}</td>
+      <td>${d.especialidad||'–'}</td>
+      <td>${(d.idiomas||[]).join(', ')||'–'}</td>
+      <td>${d.activo?'<span class="badge bg">Activo</span>':'<span class="badge bk">Inactivo</span>'}</td>`,
+    pagos: d=>`<td><strong>${RM[d.reservacion_id]?.cli||'–'}</strong></td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${RM[d.reservacion_id]?.tour||'–'}</td>
+      <td><strong>$${Number(d.monto).toLocaleString('es-MX')}</strong></td>
+      <td>${d.metodo||'–'}</td><td>${d.referencia||'–'}</td>
+      <td>${fmtD(d.fecha_pago)}</td><td>${bEstatus(d.estatus)}</td>`,
+    resenas: d=>`<td><strong>${CM[d.cliente_id]||'–'}</strong></td>
+      <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${TM[d.tour_id]||'–'}</td>
+      <td><span style="color:#e8c040">${'★'.repeat(d.calificacion)}</span> ${d.calificacion}/5</td>
+      <td style="max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.67rem;color:var(--muted)">${esc(d.comentario||'–')}</td>
+      <td>${d.aprobada?'<span class="badge bg">Publicada</span>':'<span class="badge by">Pendiente</span>'}</td>`
+  }
+  const extras={
+    reservaciones: d=>`<button class="btn btn-warn btn-sm" title="Siguiente estado" onclick="nextEstado('${d.id}','${d.estado}')">⚡</button>`,
+    resenas: d=>!d.aprobada?`<button class="btn btn-ok btn-sm" onclick="aprobar('${d.id}')">✓ Aprobar</button>`:''
+  }
+  tb.innerHTML=data.map(d=>`<tr>
+    ${rows[sec](d)}
+    <td><div class="td-acts">
+      ${extras[sec]?.(d)||''}
+      <button class="btn btn-ghost btn-sm" onclick="openEdit('${sec}','${d.id}')">✏️</button>
+      <button class="btn btn-danger btn-sm" onclick="askDel('${sec}','${d.id}')">🗑️</button>
+    </div></td></tr>`).join('')
+}
+
+function filter(sec){
+  const q=document.getElementById(`s-${sec}`).value.toLowerCase()
+  renderTable(sec,q?(cache[sec]||[]).filter(d=>JSON.stringify(d).toLowerCase().includes(q)):cache[sec]||[])
+}
+
+async function nextEstado(id,actual){
+  const ord=['pendiente','confirmada','completada','cancelada']
+  const next=ord[(ord.indexOf(actual)+1)%ord.length]
+  try{await api(`reservaciones?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({estado:next})});toast(`Estado → ${next}`,'ok');loadSection('reservaciones')}
+  catch(e){toast(e.message,'err')}
+}
+async function aprobar(id){
+  try{await api(`resenas?id=eq.${id}`,{method:'PATCH',body:JSON.stringify({aprobada:true})});toast('Reseña aprobada ✓','ok');loadSection('resenas')}
+  catch(e){toast(e.message,'err')}
+}
+
+function buildForm(sec,d={}){
+  const opt=(arr,v)=>arr.map(x=>`<option value="${x}"${v===x?' selected':''}>${x}</option>`).join('')
+  const sCli=Object.entries(CM).map(([id,n])=>`<option value="${id}"${d.cliente_id===id?' selected':''}>${n}</option>`).join('')
+  const sTours=Object.entries(TM).map(([id,n])=>`<option value="${id}"${d.tour_id===id?' selected':''}>${n}</option>`).join('')
+  const sGuias=`<option value="">— Sin guía —</option>`+Object.entries(GM).map(([id,n])=>`<option value="${id}"${d.guia_id===id?' selected':''}>${n}</option>`).join('')
+  const sRes=Object.entries(RM).map(([id,info])=>`<option value="${id}"${d.reservacion_id===id?' selected':''}>…${id.slice(-6)} · ${info.cli}</option>`).join('')
+  const F={
+    tours:()=>`<div class="fg">
+      <div class="fgi ff"><label class="fl">Nombre del tour *</label><input class="fc" id="f-nombre" value="${esc(d.nombre||'')}"></div>
+      <div class="fgi ff"><label class="fl">Descripción</label><textarea class="fc" id="f-descripcion">${esc(d.descripcion||'')}</textarea></div>
+      <div class="fgi"><label class="fl">Duración (días)</label><input class="fc" type="number" id="f-duracion_dias" value="${d.duracion_dias||1}" min="1"></div>
+      <div class="fgi"><label class="fl">Dificultad</label><select class="fc" id="f-dificultad">${opt(['fácil','moderado','difícil','extremo'],d.dificultad)}</select></div>
+      <div class="fgi"><label class="fl">Precio/persona ($MXN)</label><input class="fc" type="number" id="f-precio_por_persona" value="${d.precio_por_persona||''}"></div>
+      <div class="fgi"><label class="fl">Precio grupo ($MXN)</label><input class="fc" type="number" id="f-precio_grupo" value="${d.precio_grupo||''}"></div>
+      <div class="fgi"><label class="fl">Capacidad máxima</label><input class="fc" type="number" id="f-capacidad_maxima" value="${d.capacidad_maxima||15}"></div>
+      <div class="fgi"><label class="fl">Estado</label><select class="fc" id="f-activo"><option value="true"${d.activo!==false?' selected':''}>Activo</option><option value="false"${d.activo===false?' selected':''}>Inactivo</option></select></div>
+      <div class="fgi ff"><label class="fl">Incluye (comas)</label><input class="fc" id="f-incluye" value="${(d.incluye||[]).join(', ')}"></div>
+      <div class="fgi ff"><label class="fl">No incluye (comas)</label><input class="fc" id="f-no_incluye" value="${(d.no_incluye||[]).join(', ')}"></div>
+    </div>`,
+    clientes:()=>`<div class="fg">
+      <div class="fgi"><label class="fl">Nombre *</label><input class="fc" id="f-nombre" value="${esc(d.nombre||'')}"></div>
+      <div class="fgi"><label class="fl">Apellido *</label><input class="fc" id="f-apellido" value="${esc(d.apellido||'')}"></div>
+      <div class="fgi ff"><label class="fl">Email *</label><input class="fc" type="email" id="f-email" value="${esc(d.email||'')}"></div>
+      <div class="fgi"><label class="fl">Teléfono</label><input class="fc" id="f-telefono" value="${esc(d.telefono||'')}"></div>
+      <div class="fgi"><label class="fl">País</label><input class="fc" id="f-pais" value="${esc(d.pais||'')}"></div>
+      <div class="fgi ff"><label class="fl">Ciudad</label><input class="fc" id="f-ciudad" value="${esc(d.ciudad||'')}"></div>
+      <div class="fgi ff"><label class="fl">Notas</label><textarea class="fc" id="f-notas">${esc(d.notas||'')}</textarea></div>
+    </div>`,
+    guias:()=>`<div class="fg">
+      <div class="fgi"><label class="fl">Nombre *</label><input class="fc" id="f-nombre" value="${esc(d.nombre||'')}"></div>
+      <div class="fgi"><label class="fl">Apellido *</label><input class="fc" id="f-apellido" value="${esc(d.apellido||'')}"></div>
+      <div class="fgi ff"><label class="fl">Email</label><input class="fc" type="email" id="f-email" value="${esc(d.email||'')}"></div>
+      <div class="fgi"><label class="fl">Teléfono</label><input class="fc" id="f-telefono" value="${esc(d.telefono||'')}"></div>
+      <div class="fgi"><label class="fl">Especialidad</label><input class="fc" id="f-especialidad" value="${esc(d.especialidad||'')}"></div>
+      <div class="fgi"><label class="fl">Estado</label><select class="fc" id="f-activo"><option value="true"${d.activo!==false?' selected':''}>Activo</option><option value="false"${d.activo===false?' selected':''}>Inactivo</option></select></div>
+      <div class="fgi ff"><label class="fl">Idiomas (comas)</label><input class="fc" id="f-idiomas" value="${(d.idiomas||[]).join(', ')}"></div>
+    </div>`,
+    reservaciones:()=>`<div class="fg">
+      <div class="fgi ff"><label class="fl">Cliente *</label><select class="fc" id="f-cliente_id"><option value="">— Seleccionar —</option>${sCli}</select></div>
+      <div class="fgi ff"><label class="fl">Tour *</label><select class="fc" id="f-tour_id"><option value="">— Seleccionar —</option>${sTours}</select></div>
+      <div class="fgi ff"><label class="fl">Guía</label><select class="fc" id="f-guia_id">${sGuias}</select></div>
+      <div class="fgi"><label class="fl">Fecha inicio *</label><input class="fc" type="date" id="f-fecha_inicio" value="${d.fecha_inicio||''}"></div>
+      <div class="fgi"><label class="fl">Fecha fin *</label><input class="fc" type="date" id="f-fecha_fin" value="${d.fecha_fin||''}"></div>
+      <div class="fgi"><label class="fl">Personas *</label><input class="fc" type="number" id="f-num_personas" value="${d.num_personas||1}" min="1"></div>
+      <div class="fgi"><label class="fl">Precio total ($MXN) *</label><input class="fc" type="number" id="f-precio_total" value="${d.precio_total||''}"></div>
+      <div class="fgi"><label class="fl">Estado</label><select class="fc" id="f-estado">${opt(['pendiente','confirmada','cancelada','completada'],d.estado||'pendiente')}</select></div>
+      <div class="fgi ff"><label class="fl">Método de pago</label><select class="fc" id="f-metodo_pago">${opt(['efectivo','tarjeta','transferencia','paypal','otro'],d.metodo_pago)}</select></div>
+      <div class="fgi ff"><label class="fl">Notas</label><textarea class="fc" id="f-notas">${esc(d.notas||'')}</textarea></div>
+    </div>`,
+    pagos:()=>`<div class="fg">
+      <div class="fgi ff"><label class="fl">Reservación *</label><select class="fc" id="f-reservacion_id"><option value="">— Seleccionar —</option>${sRes}</select></div>
+      <div class="fgi"><label class="fl">Monto ($MXN) *</label><input class="fc" type="number" id="f-monto" value="${d.monto||''}"></div>
+      <div class="fgi"><label class="fl">Método *</label><select class="fc" id="f-metodo">${opt(['efectivo','tarjeta','transferencia','paypal','otro'],d.metodo)}</select></div>
+      <div class="fgi"><label class="fl">Referencia / Folio</label><input class="fc" id="f-referencia" value="${esc(d.referencia||'')}"></div>
+      <div class="fgi"><label class="fl">Estatus</label><select class="fc" id="f-estatus">${opt(['pendiente','completado','reembolsado','fallido'],d.estatus||'pendiente')}</select></div>
+      <div class="fgi ff"><label class="fl">Notas</label><textarea class="fc" id="f-notas">${esc(d.notas||'')}</textarea></div>
+    </div>`,
+    resenas:()=>`<div class="fg">
+      <div class="fgi ff"><label class="fl">Cliente *</label><select class="fc" id="f-cliente_id"><option value="">— Seleccionar —</option>${sCli}</select></div>
+      <div class="fgi ff"><label class="fl">Tour *</label><select class="fc" id="f-tour_id"><option value="">— Seleccionar —</option>${sTours}</select></div>
+      <div class="fgi"><label class="fl">Calificación (1–5) *</label><input class="fc" type="number" id="f-calificacion" value="${d.calificacion||5}" min="1" max="5"></div>
+      <div class="fgi"><label class="fl">Aprobada</label><select class="fc" id="f-aprobada"><option value="true"${d.aprobada?' selected':''}>Sí — publicar</option><option value="false"${!d.aprobada?' selected':''}>No — moderación</option></select></div>
+      <div class="fgi ff"><label class="fl">Comentario</label><textarea class="fc" id="f-comentario">${esc(d.comentario||'')}</textarea></div>
+    </div>`
+  }
+  return F[sec]?.()||''
+}
+
+function openAdd(){editSec=cur;editId=null;document.getElementById('mo-title').textContent=`Agregar — ${LABELS[cur]?.t||cur}`;document.getElementById('mo-body').innerHTML=buildForm(cur);document.getElementById('mo').classList.add('on')}
+function openEdit(sec,id){editSec=sec;editId=id;const d=(cache[sec]||[]).find(x=>x.id===id);if(!d){toast('No encontrado','err');return}document.getElementById('mo-title').textContent=`Editar — ${LABELS[sec]?.t||sec}`;document.getElementById('mo-body').innerHTML=buildForm(sec,d);document.getElementById('mo').classList.add('on')}
+function closeMo(){document.getElementById('mo').classList.remove('on');editSec=null;editId=null}
+
+async function save(){
+  const btn=document.getElementById('mo-save')
+  btn.innerHTML='<div class="ld"></div>';btn.disabled=true
+  try{
+    const p=getPayload(editSec)
+    if(editId) await api(`${editSec}?id=eq.${editId}`,{method:'PATCH',body:JSON.stringify(p)})
+    else await api(editSec,{method:'POST',body:JSON.stringify(p)})
+    toast(editId?'Actualizado ✓':'Creado ✓','ok')
+    closeMo();await loadMaps();loadSection(editSec)
+  }catch(e){toast('Error: '+e.message,'err')}
+  btn.innerHTML='Guardar';btn.disabled=false
+}
+
+function getPayload(sec){
+  const g=id=>document.getElementById(id)?.value?.trim()||null
+  const gb=id=>document.getElementById(id)?.value==='true'
+  const gi=id=>{const v=parseInt(document.getElementById(id)?.value);return isNaN(v)?null:v}
+  const gf=id=>{const v=parseFloat(document.getElementById(id)?.value);return isNaN(v)?null:v}
+  const arr=id=>(document.getElementById(id)?.value||'').split(',').map(x=>x.trim()).filter(Boolean)
+  const P={
+    tours:()=>({nombre:g('f-nombre'),descripcion:g('f-descripcion'),duracion_dias:gi('f-duracion_dias'),dificultad:g('f-dificultad'),precio_por_persona:gf('f-precio_por_persona'),precio_grupo:gf('f-precio_grupo'),capacidad_maxima:gi('f-capacidad_maxima'),activo:gb('f-activo'),incluye:arr('f-incluye'),no_incluye:arr('f-no_incluye')}),
+    clientes:()=>({nombre:g('f-nombre'),apellido:g('f-apellido'),email:g('f-email'),telefono:g('f-telefono'),pais:g('f-pais'),ciudad:g('f-ciudad'),notas:g('f-notas')}),
+    guias:()=>({nombre:g('f-nombre'),apellido:g('f-apellido'),email:g('f-email'),telefono:g('f-telefono'),especialidad:g('f-especialidad'),idiomas:arr('f-idiomas'),activo:gb('f-activo')}),
+    reservaciones:()=>({cliente_id:g('f-cliente_id'),tour_id:g('f-tour_id'),guia_id:g('f-guia_id')||null,fecha_inicio:g('f-fecha_inicio'),fecha_fin:g('f-fecha_fin'),num_personas:gi('f-num_personas'),precio_total:gf('f-precio_total'),estado:g('f-estado'),metodo_pago:g('f-metodo_pago'),notas:g('f-notas')}),
+    pagos:()=>({reservacion_id:g('f-reservacion_id'),monto:gf('f-monto'),metodo:g('f-metodo'),referencia:g('f-referencia'),estatus:g('f-estatus'),notas:g('f-notas')}),
+    resenas:()=>({cliente_id:g('f-cliente_id'),tour_id:g('f-tour_id'),calificacion:gi('f-calificacion'),comentario:g('f-comentario'),aprobada:gb('f-aprobada')})
+  }
+  return P[sec]?.()||{}
+}
+
+function askDel(sec,id){delSec=sec;delId=id;document.getElementById('co').classList.add('on');document.getElementById('co-btn').onclick=doDel}
+function closeCo(){document.getElementById('co').classList.remove('on')}
+async function doDel(){
+  try{await api(`${delSec}?id=eq.${delId}`,{method:'DELETE'});toast('Eliminado','ok');closeCo();loadSection(delSec)}
+  catch(e){toast('Error: '+e.message,'err')}
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;')}
+function fmtD(d){if(!d)return'–';try{return new Date(d).toLocaleDateString('es-MX',{day:'2-digit',month:'short',year:'numeric'})}catch{return d}}
+function bDif(d){const m={'fácil':'bg','moderado':'by','difícil':'br','extremo':'br'};return`<span class="badge ${m[d]||'bk'}">${d||'–'}</span>`}
+function bEstado(e){const m={pendiente:'by',confirmada:'bg',cancelada:'br',completada:'bb'};return`<span class="badge ${m[e]||'bk'}">${e||'–'}</span>`}
+function bEstatus(e){const m={completado:'bg',pendiente:'by',reembolsado:'bb',fallido:'br'};return`<span class="badge ${m[e]||'bk'}">${e||'–'}</span>`}
+function toast(msg,type='ok'){
+  const el=document.createElement('div')
+  el.className=`tst tst-${type==='ok'?'ok':'err'}`
+  el.innerHTML=`<strong>${type==='ok'?'✓':'✕'}</strong> ${msg}`
+  document.getElementById('tsts').appendChild(el)
+  setTimeout(()=>el.remove(),4000)
+}
+
+document.getElementById('mo').addEventListener('click',e=>{if(e.target===e.currentTarget)closeMo()})
+document.getElementById('co').addEventListener('click',e=>{if(e.target===e.currentTarget)closeCo()})
+
+document.addEventListener('DOMContentLoaded',async()=>{
+  await loadMaps()
+  loadDashboard()
+})
+</script>
+</body>
+</html>
